@@ -1,6 +1,9 @@
+from collections.abc import Iterable
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse 
+from django.db import IntegrityError
+from django.template.defaultfilters import slugify
 
 
 class User(AbstractUser):
@@ -16,6 +19,13 @@ class User(AbstractUser):
     def __str__(self): 
         return self.email
     
-    
+    def save(self, *args, **kwargs):
+        while True:
+            self.slug = slugify(self.username)
+            try:
+                return super().save(*args, **kwargs)
+            except IntegrityError:
+                continue
+
     
 

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid pt-5">
+	<div class="text-center mb-4">
+		
+		<form action="{% url 'account:profile_update' %}" method="post">
+			{% csrf_token %} 
+        {{form.as_p}}
+
+		<div>
+			<button class="btn btn-primary btn-block border-0 py-3" type="submit">Save changes</button>
+		</div>
+			
+		</form>
+		<div>
+			{% comment %} <a href='{% url "#"  %}'> <button class="btn btn-primary btn-block border-0 py-3" type="submit">update profile</button></a>
+			<a href='{% url "#"  %}'> <button class="btn btn-primary btn-block border-0 py-3" type="submit">update profile</button></a> {% endcomment %}
+		</div>
+	</div>
+	
+</div>
+
+
+{% endblock %}
