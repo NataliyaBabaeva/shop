@@ -3,6 +3,7 @@ from .forms import (
     RegisterForm,
     LoginForm,
     ProfileForm ,
+    ChangePasswordForm,
 )
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -90,8 +91,27 @@ def profile_update_view(request):
     return render(request=request, template_name='profile_update.html', context=context)
     
     
-
-
+@login_required
+def new_password_view(request):
+    form = ChangePasswordForm()
+    
+    if request.method == 'POST':
+        form = ChangePasswordForm(data=request.POST,instance=request.user)
+        password_failed = None
+        if form.is_valid():
+            user = authenticate(request=request,username=request.user.username,password=form.changed_data.get('password'))
+            if user is not None:
+                user = form.save(commit=False)
+                user.set_password(raw_password=form.cleaned_data.get('new_password'))
+                user.save()
+                return redirect('account:my_profile')
+            password_failed = 'wrong password'
+        context = {'form':form,'error':'filed to reset password','password':password_failed,}
+        return render(request, 'new_password.html', context)
+    
+    context = {'form':form}
+    
+    return render(request, 'new_password.html', context)
 
 
      

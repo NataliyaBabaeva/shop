@@ -6,6 +6,7 @@ from .views import(
     logout_func,
     profile_update_view,
     my_profile,
+    new_password_view
     
     
 )
@@ -17,6 +18,7 @@ urlpatterns = [
    path('login/',login_func, name='login'),
    path('logout/', logout_func, name='logout'),
    path('profile/',my_profile, name= 'my_profile' ),
-   path('profile/update/', profile_update_view, name = 'profile_update', )
+   path('profile/update/', profile_update_view, name = 'profile_update'),
+   path('profile/new/password',new_password_view, name= 'new_password' ),
    
 ]

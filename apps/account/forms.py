@@ -46,6 +46,22 @@ class ProfileForm(forms.ModelForm):
         fields = ('username', 'first_name', 'last_name')
         
         
+
+class ChangePasswordForm(forms.ModelForm):
+    
+    new_password = forms.CharField(max_length=30)
+    
+    class Meta:
+        model = User
+        fields = ('password', 'new_password')
+        
+    def clean_new_password(self) :
+        password : str = self.cleaned_data.get['new_password']
+        
+        if len (password) < 8 :
+            raise ValidationError('short password ')
+        
+        return password
     
     
         
