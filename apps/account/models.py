@@ -11,6 +11,7 @@ class User(AbstractUser):
     slug = models.SlugField('slug', max_length=100,unique=True)
     email = models.EmailField('Email' , unique=True)
     phone_number = models.CharField(max_length=20,null=True)
+    favorites = models.ManyToManyField('shop.Product')
     
     class Meta:
         verbose_name = 'user' 

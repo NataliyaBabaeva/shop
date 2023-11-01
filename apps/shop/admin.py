@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category,Product,ProductImage,Review,ReviewImage
+from .models import Category,Product,ProductImage,Review,ReviewImage,ProductSizes,ProductColors
 
 
 @admin.register(Category)
@@ -35,7 +35,9 @@ class ReviewAdmin(admin.ModelAdmin):
     inlines = [ReviewImageInline,]
 
 
-# admin.site.register(Category,CategoryAdmin)
-# admin.site.register(Product,ProductAdmin)
+
+
+admin.site.register(ProductColors)
+admin.site.register(ProductSizes)
 # admin.site.register(Review,ReviewAdmin)
 

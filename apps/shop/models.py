@@ -14,34 +14,41 @@ class Category(models.Model):
         verbose_name = 'category' 
         verbose_name_plural = 'categories'
         
-    # def get_absolute_url(self): #общепринят способ получ юрл задан объекта,исп шабл кот определила в файле urls.py
-    #     return reverse("shop:product_list_by_category", args=[self.slug])
+    def get_absolute_url(self): #общепринят способ получ юрл задан объекта,исп шабл кот определила в файле urls.py
+        return reverse("shop:product_list_by_category", args=[self.slug])
       
     def __str__(self): 
         return self.name
 
 
 
+class ProductSizes(models.Model):
+    size = models.CharField("Size", max_length=5)
+    
+    class Meta:
+        verbose_name = "Size"
+        verbose_name_plural = "Sizes"
+
+
+    def __str__(self):
+        return self.size
+
+
+class ProductColors(models.Model):
+    color = models.CharField("Color", max_length=25)
+
+    class Meta:
+        verbose_name = "Color"
+        verbose_name_plural = "Colors"
+
+
+    def __str__(self):
+        return self.color
+
+
              
 class Product(models.Model):
-    XS = 'xs'
-    S = 's'
-    M = 'm'
-    L = 'l'
-    XL = 'xl'
-    SIZES = [
-        (XS, 'xs'),
-        (S, 's'),
-        (M, 'm'),
-        (L, 'l'),
-        (XL, 'xl'),
-    ]
     
-    COLORS = [
-        ('white', 'White'),
-        ('black', 'Black'),
-        ('blue', 'Blue')
-    ]
     category = models.ForeignKey(Category, related_name='products',on_delete=models.CASCADE) #один ко многим
     name = models.CharField(max_length=200)
     slug = models.SlugField('Slug',max_length=200) #слаг для созд url адресов
@@ -50,8 +57,9 @@ class Product(models.Model):
     available = models.BooleanField(default=True) #булевое значение продукта
     created = models.DateTimeField('Date created',auto_now_add=True) #дата создания проекта
     updated = models.DateTimeField('Date updated',auto_now=True) #дата обновления
-    size = models.CharField('Size',max_length=3,choices=SIZES)
-    color = models.CharField('Color', max_length=10,choices=COLORS)
+    discount = models.PositiveSmallIntegerField("Discount", blank=True, default=0)
+    sizes = models.ManyToManyField(ProductSizes, related_name="products")
+    colors = models.ManyToManyField(ProductColors, related_name="products")
     
     class Meta:
         ordering = ['name'] 
@@ -62,11 +70,17 @@ class Product(models.Model):
         verbose_name = 'product' 
         verbose_name_plural = 'products'
         
-    # def get_absolute_url(self):
-    #     return reverse("shop:product_detail", args=[self.id, self.slug])
+    def get_absolute_url(self):
+        return reverse("shop:product_detail", args=[self.id, self.slug])
         
     def __str__(self): 
         return self.name
+    
+    
+    @property
+    def total_price(self):
+        return(self.price-(self.price*self.discount/100))
+        
 
 
 class ProductImage(models.Model):
